@@ -4,14 +4,20 @@ import { useState } from "react";
 function ResponsiveNavbar({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void; }) {
   return (
     <div
-      className={`md:hidden absolute rounded-3xl top-0 left-0 right-0  bg-slate-300 transform ${
+      className={`md:hidden absolute rounded-3xl top-0 w-full z-30 bg-slate-300 shadow-md shadow-slate-300 transform ${
         open ? "-translate-y-0" : "-translate-y-full"
       } transition-transform duration-300 ease-in-out filter`}
     >
       <div className="flex flex-col justify-center items-center mt-28">
-        <Link href="/" className="text-2xl font-bold my-4">Projects</Link>
-        <Link href="/" className="text-2xl font-bold my-4">Documentation</Link>
-        <Link href="/" className="text-2xl font-bold my-4">login</Link>
+        <Link href="/" className="text-2xl font-bold my-4">
+          Projects
+        </Link>
+        <Link href="/" className="text-2xl font-bold my-4">
+          Documentation
+        </Link>
+        <Link href="/" className="text-2xl font-bold my-4">
+          login
+        </Link>
       </div>
     </div>
   );
@@ -20,10 +26,10 @@ function ResponsiveNavbar({ open, setOpen }: { open: boolean; setOpen: (open: bo
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
-    <>
+    <div className="w-screen">
       <ResponsiveNavbar open={open} setOpen={setOpen} />
-      <div className="w-full bg-slate-300 fixed top-0 left-0 h-20 z-50 m-0 flex flex-row items-center">
-        <div className="container h-full w-screen flex flex-row items-center justify-center">
+      <div className="w-full bg-slate-300 fixed top-0 left-0 h-20 z-50 m-0 flex flex-row items-center shadow-md shadow-slate-300">
+        <div className="h-full w-screen flex flex-row items-center justify-center">
           <Link className="" href="/">
             To-Do
           </Link>
@@ -36,18 +42,27 @@ const Navbar = () => {
               }}
             >
               <span
-                className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${
-                  open ? "-rotate-45 traslate-y-2.5" : ""
-                }`}
-              />
-              <span
-                className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${
+                className={`h-1 bg-black rounded-lg transform transition duration-300 ease-in-out ${
                   open ? "w-0" : "w-full"
                 }`}
               />
+              <div className="h-full w-full relative items-center flex ">
+                <span
+                  className={`h-1 bg-black rounded-lg transform transition duration-300 ease-in-out ${
+                    open ? "rotate-45 traslate-y-2.5 w-full" : "w-full"
+                  }`}
+                />
+                <span
+                  className={`h-1 bg-black rounded-lg transform transition duration-300 ease-in-out ${
+                    open
+                      ? "-rotate-45 traslate-y-2.5 w-full"
+                      : "rotate-0 traslate-y-2.5 w-full"
+                  }`}
+                />
+              </div>
               <span
-                className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${
-                  open ? "rotate-45 -traslate-y-2.5" : ""
+                className={`h-1 bg-black rounded-lg transform transition duration-300 ease-in-out ${
+                  open ? "w-0" : "w-full"
                 }`}
               />
             </div>
@@ -59,7 +74,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
