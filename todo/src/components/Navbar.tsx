@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <div className="w-screen">
       <ResponsiveNavbar open={open} setOpen={setOpen} />
-      <div className="w-full bg-slate-300 fixed top-0 left-0 h-20 z-50 m-0 flex flex-row items-center shadow-md shadow-slate-300">
+      <div className="w-full bg-slate-100 fixed top-0 left-0 h-14 z-50 m-0 flex flex-row items-center">
         <div className="h-full w-screen flex flex-row items-center justify-center">
           <Link className="" href="/">
             To-Do

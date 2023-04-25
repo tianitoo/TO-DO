@@ -2,61 +2,147 @@ import { Column, Task } from "@/types/dataType";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import dynamic from "next/dynamic";
 import React from "react";
+import ColumnActions from "./ColumnActions";
 
 const Columns = (props: {
   column: Column;
   tasks: Task[];
   addTask: (task: string, columnId: string) => void;
+  isShowingAddTask: string;
+  showAddTask: (columnId: string) => void;
+  removeColumn: (id: string) => void;
 }) => {
-  const { tasks } = props;
-  const { column } = props;
-  const { addTask } = props;
+  const {
+    column,
+    tasks,
+    addTask,
+    isShowingAddTask,
+    showAddTask,
+    removeColumn,
+  } = props;
+
+  const [newTask, setNewTask] = React.useState("");
+
+  function handleTaskChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setNewTask(e.target.value);
+  }
+
+  function handleTaskClick(task: string, columnId: string) {
+    if (task === "") return;
+    addTask(task, columnId);
+    setNewTask("");
+  }
+
+  const [showActions, setShowActions] = React.useState(false);
+  function handleShowActions() {
+    if (showActions) {
+      setShowActions(false);
+    } else {
+      setShowActions(true);
+    }
+  }
+
   return (
-    <div className="flex px-10 w-fit h-fit">
-      <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-800 flex-1 rounded-3xl justify-start">
-        <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-3xl font-bold bg-slate-100">
-          {column.title}
-        </div>
-        <Droppable droppableId={column.id}>
-          {(droppableProvided, droppebleSnapshot) => (
-            <div
-              ref={droppableProvided.innerRef}
-              {...droppableProvided.droppableProps}
-            >
-              {tasks.map((task, index) => (
-                <Draggable
-                  key={task.id}
-                  draggableId={`${task.id}`}
-                  index={index}
-                >
-                  {(draggableProvided, draggableSnapshot) => {
-                    return (
-                      <div
-                        ref={draggableProvided.innerRef}
-                        {...draggableProvided.draggableProps}
-                        {...draggableProvided.dragHandleProps}
-                        className={`on-top w-11/12 text-left p-2 mx-auto my-2 h-auto align-middle rounded-xl bg-white shadow-sm shadow-slate-500 ${
-                          draggableSnapshot.isDragging
-                            ? "bg-slate-100 shadow-lg shadow-slate-300"
-                            : ""
-                        }`}
-                      >
-                        {task.content}
-                      </div>
-                    );
-                  }}
-                </Draggable>
-              ))}
-              {droppableProvided.placeholder}
+    <>
+      <div className="relative">
+        <div className="flex px-3 w-fit h-fit">
+          <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-400 flex-1 rounded-sm justify-start">
+            <div className="flex justify-between pr-3 items-center align-middle ">
+              <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
+                {column.title}
+              </div>
+              <button
+                className="w-5 h-5"
+                id="button"
+                onClick={handleShowActions}
+              >
+                ...
+              </button>
             </div>
-          )}
-        </Droppable>
-        <div className="w-11/12 text-left p-2 h-auto mx-auto align-middle rounded-3xl text-slate-600 bg-slate-100">
-          <span className="text-xl h-auto">+ </span>
-          <button onClick={() => {addTask("tassk", column.id)}}>create new task</button>
+            <Droppable droppableId={column.id}>
+              {(droppableProvided, droppebleSnapshot) => (
+                <div
+                  ref={droppableProvided.innerRef}
+                  {...droppableProvided.droppableProps}
+                >
+                  {tasks.map((task, index) => (
+                    <Draggable
+                      key={task.id}
+                      draggableId={`${task.id}`}
+                      index={index}
+                    >
+                      {(draggableProvided, draggableSnapshot) => {
+                        return (
+                          <div
+                            ref={draggableProvided.innerRef}
+                            {...draggableProvided.draggableProps}
+                            {...draggableProvided.dragHandleProps}
+                            className={`on-top w-11/12 text-left p-2 mx-auto my-2 h-auto align-middle break-words rounded-sm bg-white shadow-sm shadow-slate-500 ${
+                              draggableSnapshot.isDragging
+                                ? "bg-slate-100 shadow-lg shadow-slate-300"
+                                : ""
+                            }`}
+                          >
+                            {task.content}
+                          </div>
+                        );
+                      }}
+                    </Draggable>
+                  ))}
+                  {droppableProvided.placeholder}
+                </div>
+              )}
+            </Droppable>
+            <div
+              className={`flex flex-col w-11/12 text-left h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100 ${
+                isShowingAddTask === column.id ? "" : "hidden"
+              }`}
+            >
+              <textarea
+                name="task"
+                onChange={handleTaskChange}
+                value={newTask}
+                className="w-full h-fit break-words text-left p-2 rounded-md border-2 border-blue-300"
+              />
+              <div className="flex flex-row gap-3">
+                <button
+                  onClick={() => {
+                    handleTaskClick(newTask, column.id);
+                  }}
+                  className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                >
+                  add
+                </button>
+                <button
+                  className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                  onClick={() => {
+                    showAddTask(column.id);
+                  }}
+                >
+                  cancel
+                </button>
+              </div>
+            </div>
+            {isShowingAddTask !== column.id ? (
+              <div className="w-11/12 text-left p-2 h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100">
+                <button
+                  className="mt-3 px-2 py-1.5 flex items-center text-sm text-center  bg-slate-800 transition duration-300 hover:bg-slate-100 hover:text-stone-800 hover:border border hover:border-slate-800 text-slate-100 rounded-md"
+                  onClick={() => showAddTask(column.id)}
+                >
+                  <span className="text-xl h-auto mr-1">+ </span>
+                  Add Task
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
+        <ColumnActions
+          removeColumn={removeColumn}
+          column={column}
+          showActions={showActions}
+        />
       </div>
-    </div>
+    </>
   );
 };
 
