@@ -3,7 +3,7 @@ export interface Task {
   content: string;
 }
 
-export interface Column {
+export interface Card {
   id: string;
   title: string;
   taskIds: number[];
@@ -12,7 +12,16 @@ export interface Column {
 
 export interface MyData {
   tasks: { [key: number]: Task };
-  columns: { [key: string]: Column };
-  columnOrder: string[];
+  cards: { [key: string]: Card };
+  cardOrder: string[];
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 

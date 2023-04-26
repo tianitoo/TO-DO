@@ -11,17 +11,17 @@ export const myData: MyData = {
     7: { id: 7, content: "Create another page layout" },
     8: { id: 8, content: "Create just create" },
   },
-  columns: {
-    "column-1": {
-      id: "column-1",
+  cards: {
+    "card-1": {
+      id: "card-1",
       title: "TO-DO",
       taskIds: [1, 2, 3, 4, 5, 6, 7, 8],
     },
-    "column-2": {
-      id: "column-2",
+    "card-2": {
+      id: "card-2",
       title: "IN-PROGRESS",
       taskIds: [],
     },
   },
-  columnOrder: ["column-1", "column-2"],
+  cardOrder: ["card-1", "card-2"],
 };

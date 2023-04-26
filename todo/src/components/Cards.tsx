@@ -1,24 +1,24 @@
-import { Column, Task } from "@/types/dataType";
+import { Card, Task } from "@/types/dataType";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import dynamic from "next/dynamic";
 import React from "react";
-import ColumnActions from "./ColumnActions";
+import CardActions from "./CardActions";
 
-const Columns = (props: {
-  column: Column;
+const Cards = (props: {
+  card: Card;
   tasks: Task[];
-  addTask: (task: string, columnId: string) => void;
+  addTask: (task: string, cardId: string) => void;
   isShowingAddTask: string;
-  showAddTask: (columnId: string) => void;
-  removeColumn: (id: string) => void;
+  showAddTask: (cardId: string) => void;
+  removeCard: (id: string) => void;
 }) => {
   const {
-    column,
+    card,
     tasks,
     addTask,
     isShowingAddTask,
     showAddTask,
-    removeColumn,
+    removeCard,
   } = props;
 
   const [newTask, setNewTask] = React.useState("");
@@ -27,9 +27,9 @@ const Columns = (props: {
     setNewTask(e.target.value);
   }
 
-  function handleTaskClick(task: string, columnId: string) {
+  function handleTaskClick(task: string, cardId: string) {
     if (task === "") return;
-    addTask(task, columnId);
+    addTask(task, cardId);
     setNewTask("");
   }
 
@@ -42,6 +42,10 @@ const Columns = (props: {
     }
   }
 
+  const test = () => {
+    
+  };
+
   return (
     <>
       <div className="relative">
@@ -49,7 +53,7 @@ const Columns = (props: {
           <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-400 flex-1 rounded-sm justify-start">
             <div className="flex justify-between pr-3 items-center align-middle ">
               <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
-                {column.title}
+                {card.title}
               </div>
               <button
                 className="w-5 h-5"
@@ -59,7 +63,7 @@ const Columns = (props: {
                 ...
               </button>
             </div>
-            <Droppable droppableId={column.id}>
+            <Droppable droppableId={card.id}>
               {(droppableProvided, droppebleSnapshot) => (
                 <div
                   ref={droppableProvided.innerRef}
@@ -95,7 +99,7 @@ const Columns = (props: {
             </Droppable>
             <div
               className={`flex flex-col w-11/12 text-left h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100 ${
-                isShowingAddTask === column.id ? "" : "hidden"
+                isShowingAddTask === card.id ? "" : "hidden"
               }`}
             >
               <textarea
@@ -107,7 +111,7 @@ const Columns = (props: {
               <div className="flex flex-row gap-3">
                 <button
                   onClick={() => {
-                    handleTaskClick(newTask, column.id);
+                    handleTaskClick(newTask, card.id);
                   }}
                   className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
                 >
@@ -116,18 +120,18 @@ const Columns = (props: {
                 <button
                   className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
                   onClick={() => {
-                    showAddTask(column.id);
+                    showAddTask(card.id);
                   }}
                 >
                   cancel
                 </button>
               </div>
             </div>
-            {isShowingAddTask !== column.id ? (
+            {isShowingAddTask !== card.id ? (
               <div className="w-11/12 text-left p-2 h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100">
                 <button
                   className="mt-3 px-2 py-1.5 flex items-center text-sm text-center  bg-slate-800 transition duration-300 hover:bg-slate-100 hover:text-stone-800 hover:border border hover:border-slate-800 text-slate-100 rounded-md"
-                  onClick={() => showAddTask(column.id)}
+                  onClick={() => showAddTask(card.id)}
                 >
                   <span className="text-xl h-auto mr-1">+ </span>
                   Add Task
@@ -136,9 +140,9 @@ const Columns = (props: {
             ) : null}
           </div>
         </div>
-        <ColumnActions
-          removeColumn={removeColumn}
-          column={column}
+        <CardActions
+          removeCard={removeCard}
+          card={card}
           showActions={showActions}
         />
       </div>
@@ -146,4 +150,4 @@ const Columns = (props: {
   );
 };
 
-export default Columns;
+export default Cards;

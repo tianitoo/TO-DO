@@ -3,22 +3,18 @@ import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { myData } from "@/data/data";
 
-const Columns = dynamic(() => import("@/components/Columns"), { ssr: false });
+const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
-const reorderColumnList = (
-  column: any,
-  startIndex: number,
-  endIndex: number
-) => {
-  const newTaskIds = Array.from(column.taskIds);
+const reorderCardList = (card: any, startIndex: number, endIndex: number) => {
+  const newTaskIds = Array.from(card.taskIds);
   const [removed] = newTaskIds.splice(startIndex, 1);
   newTaskIds.splice(endIndex, 0, removed);
 
-  const newColumn = {
-    ...column,
+  const newCard = {
+    ...card,
     taskIds: newTaskIds,
   };
-  return newColumn;
+  return newCard;
 };
 
 const TodoLists = () => {
@@ -40,19 +36,15 @@ const TodoLists = () => {
       return;
     }
 
-    const sourceCol = data.columns[source.droppableId];
-    const destinationCol = data.columns[destination.droppableId];
+    const sourceCol = data.cards[source.droppableId];
+    const destinationCol = data.cards[destination.droppableId];
     if (sourceCol === destinationCol) {
-      const newColumn = reorderColumnList(
-        sourceCol,
-        source.index,
-        destination.index
-      );
+      const card = reorderCardList(sourceCol, source.index, destination.index);
       const newData = {
         ...data,
-        columns: {
-          ...data.columns,
-          [newColumn.id]: newColumn,
+        cards: {
+          ...data.cards,
+          [card.id]: card,
         },
       };
       setData(newData);
@@ -75,8 +67,8 @@ const TodoLists = () => {
 
     const newData = {
       ...data,
-      columns: {
-        ...data.columns,
+      cards: {
+        ...data.cards,
         [newSourceCol.id]: newSourceCol,
         [newDestinationCol.id]: newDestinationCol,
       },
@@ -84,7 +76,7 @@ const TodoLists = () => {
     setData(newData);
   };
 
-  const addTask = (task: string, columnId: string) => {
+  const addTask = async (task: string, cardId: string) => {
     const newTask = {
       id: Object.keys(data.tasks).length + 1,
       content: task,
@@ -93,15 +85,30 @@ const TodoLists = () => {
       ...data.tasks,
       [newTask.id]: newTask,
     };
-    const newColumn = {
-      ...data.columns[columnId],
-      taskIds: [...data.columns[columnId].taskIds, newTask.id],
+    const Card = {
+      ...data.cards[cardId],
+      taskIds: [...data.cards[cardId].taskIds, newTask.id],
     };
-    const newColumns = {
-      ...data.columns,
-      [newColumn.id]: newColumn,
+    const newCards = {
+      ...data.cards,
+      [Card.id]: Card,
     };
-    setData({ ...data, tasks: newTasks, columns: newColumns });
+    setData({ ...data, tasks: newTasks, cards: newCards });
+
+    const createUser = await fetch("/api/users/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "user",
+        email: "email@gmail.com",
+        password: "password",
+      }),
+    });
+    console.log(createUser);
+
+    // console.log(createProject)
   };
 
   const [isShowingAddTask, setIsShowingAddTask] = React.useState("");
@@ -111,111 +118,110 @@ const TodoLists = () => {
     } else setIsShowingAddTask(id);
   }
 
-  const addColumn = (name: string) => {
-    const newColumn = {
-      id: `column-${Object.keys(data.columns).length + 1}`,
+  const addCard = (name: string) => {
+    const newCard = {
+      id: `card-${Object.keys(data.cards).length + 1}`,
       title: name,
       taskIds: [],
     };
-    const newColumns = {
-      ...data.columns,
-      [newColumn.id]: newColumn,
+    const newCards = {
+      ...data.cards,
+      [newCard.id]: newCard,
     };
-    const newColumnOrder = [...data.columnOrder, newColumn.id];
-    setData({ ...data, columns: newColumns, columnOrder: newColumnOrder });
+    const newCardOrder = [...data.cardOrder, newCard.id];
+    setData({ ...data, cards: newCards, cardOrder: newCardOrder });
   };
 
-  const removeColumn = (id: string) => {
-    const newColumns = { ...data.columns };
-    delete newColumns[id];
-    const newColumnOrder = data.columnOrder.filter((colId) => colId !== id);
-    setData({ ...data, columns: newColumns, columnOrder: newColumnOrder });
+  const removeCard = (id: string) => {
+    const newCards = { ...data.cards };
+    delete newCards[id];
+    const newCardOrder = data.cardOrder.filter((colId) => colId !== id);
+    setData({ ...data, cards: newCards, cardOrder: newCardOrder });
   };
 
-  const [newColumn, setNewColumn] = useState<string>("");
+  const [newCard, setNewCard] = useState<string>("");
 
-  function handleColumnChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setNewColumn(e.target.value);
+  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setNewCard(e.target.value);
   }
 
-  function handleAddClick(newColumn: string) {
-    if (newColumn === "") return;
-    addColumn(newColumn);
-    setNewColumn("");
-    setIsShowingAddColumn(false);
+  function handleAddClick(newCard: string) {
+    if (newCard === "") return;
+    addCard(newCard);
+    setNewCard("");
+    setIsShowingAddCard(false);
   }
 
-  const [isShowingAddColumn, setIsShowingAddColumn] = React.useState(false);
-  function showAddColumn() {
-    setIsShowingAddColumn(!isShowingAddColumn);
+  const [isShowingAddCard, setIsShowingAddCard] = React.useState(false);
+  function showAddCard() {
+    setIsShowingAddCard(!isShowingAddCard);
   }
 
   return (
     <div className="w-fit">
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex flex-row justify-start left-0">
-        {data.columnOrder.map((columnId) => {
-          const column = data.columns[columnId];
-          const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
-          return (
-            <Columns
-              key={column.id}
-              column={column}
-              tasks={tasks}
-              addTask={(task: string, columnId: string) =>
-                addTask(task, columnId)
-              }
-              removeColumn={(id: string) => removeColumn(id)}
-              isShowingAddTask={isShowingAddTask}
-              showAddTask={showAddTask}
-            />
-          );
-        })}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex flex-row justify-start left-0">
+          {data.cardOrder.map((cardId) => {
+            const card = data.cards[cardId];
+            const tasks = card.taskIds.map((taskId) => data.tasks[taskId]);
+            return (
+              <Cards
+                key={card.id}
+                card={card}
+                tasks={tasks}
+                addTask={(task: string, cardId: string) =>
+                  addTask(task, cardId)
+                }
+                removeCard={(id: string) => removeCard(id)}
+                isShowingAddTask={isShowingAddTask}
+                showAddTask={showAddTask}
+              />
+            );
+          })}
 
-        <div className="flex px-3 w-fit h-fit">
-          <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-800 flex-1 rounded-md justify-start">
-            <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
-              <div className="mb-3">Add New Column</div>
-              {isShowingAddColumn ? (
-                <>
-                  <div className="mb-3 text-sm">Column name</div>
-                  <textarea
-                    className="w-full h-fit break-words shadow-slate-800 rounded-md border-none text-left p-2 border-2 border-blue-300"
-                    placeholder="Add a new column"
-                    value={newColumn}
-                    onChange={handleColumnChange}
-                  ></textarea>
-                  <div className="flex flex-row gap-3">
-                    <button
-                      className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
-                      onClick={() => {
-                        handleAddClick(newColumn);
-                      }}
-                    >
-                      Add
-                    </button>
-                    <button
-                      className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
-                      onClick={showAddColumn}
-                    >
-                      cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <button
-                  className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
-                  onClick={showAddColumn}
-                >
-                  Add column
-                </button>
-              )}
+          <div className="flex px-3 w-fit h-fit">
+            <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-800 flex-1 rounded-md justify-start">
+              <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
+                <div className="mb-3">Add New Card</div>
+                {isShowingAddCard ? (
+                  <>
+                    <div className="mb-3 text-sm">Card name</div>
+                    <textarea
+                      className="w-full h-fit break-words shadow-slate-800 rounded-md border-none text-left p-2 border-2 border-blue-300"
+                      placeholder="Add a new card"
+                      value={newCard}
+                      onChange={handleCardChange}
+                    ></textarea>
+                    <div className="flex flex-row gap-3">
+                      <button
+                        className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                        onClick={() => {
+                          handleAddClick(newCard);
+                        }}
+                      >
+                        Add
+                      </button>
+                      <button
+                        className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                        onClick={showAddCard}
+                      >
+                        cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <button
+                    className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                    onClick={showAddCard}
+                  >
+                    Add card
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </DragDropContext>
-        
+      </DragDropContext>
     </div>
   );
 };

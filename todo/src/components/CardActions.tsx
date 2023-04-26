@@ -1,12 +1,12 @@
-import { Column } from "@/types/dataType";
+import { Card } from "@/types/dataType";
 import React from "react";
 
-const ColumnActions = (props: {
-  removeColumn: (columnId: string) => void;
-  column: Column;
+const CardActions = (props: {
+  removeCard: (cardId: string) => void;
+  card: Card;
   showActions: boolean;
 }) => {
-  const { removeColumn, column, showActions } = props;
+  const { removeCard, card, showActions } = props;
 
   return (
     <>
@@ -20,7 +20,7 @@ const ColumnActions = (props: {
           hover:text-stone-800 text-slate-100 shadow-sm
           shadow-slate-800 rounded-md`}
           onClick={() => {
-            removeColumn(column.id);
+            removeCard(card.id);
           }}
         >
           remove
@@ -30,4 +30,4 @@ const ColumnActions = (props: {
   );
 };
 
-export default ColumnActions;
+export default CardActions;
