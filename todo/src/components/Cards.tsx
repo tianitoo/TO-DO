@@ -42,9 +42,7 @@ const Cards = (props: {
     }
   }
 
-  const test = () => {
-    
-  };
+
 
   return (
     <>
@@ -81,7 +79,8 @@ const Cards = (props: {
                             ref={draggableProvided.innerRef}
                             {...draggableProvided.draggableProps}
                             {...draggableProvided.dragHandleProps}
-                            className={`on-top w-11/12 text-left p-2 mx-auto my-2 h-auto align-middle break-words rounded-sm bg-white shadow-sm shadow-slate-500 ${
+                            className={`on-top w-11/12 text-left p-2 mx-auto my-2 h-auto align-middle break-words 
+                            rounded-sm bg-white shadow-sm shadow-slate-500 ${
                               draggableSnapshot.isDragging
                                 ? "bg-slate-100 shadow-lg shadow-slate-300"
                                 : ""

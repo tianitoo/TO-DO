@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { myData } from "@/data/data";
+import { MyData } from "@/types/dataType";
 
 const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
@@ -17,12 +17,12 @@ const reorderCardList = (card: any, startIndex: number, endIndex: number) => {
   return newCard;
 };
 
-const TodoLists = () => {
-  const [data, setData] = React.useState(myData);
+const TodoLists = (props: {myData: MyData}) => {
 
+  const { myData } = props;
+  const [data, setData] = React.useState(myData);
   const onDragEnd = (result: any) => {
     const { destination, source } = result;
-    console.log(result);
     if (!destination) {
       return;
     }
@@ -36,14 +36,14 @@ const TodoLists = () => {
       return;
     }
 
-    const sourceCol = data.cards[source.droppableId];
-    const destinationCol = data.cards[destination.droppableId];
+    const sourceCol = data.Projects[1].cards[source.index];
+    const destinationCol = data.Projects[destination.droppableId].cards[destination.index]
     if (sourceCol === destinationCol) {
       const card = reorderCardList(sourceCol, source.index, destination.index);
       const newData = {
         ...data,
         cards: {
-          ...data.cards,
+          ...data.Projects,
           [card.id]: card,
         },
       };
@@ -94,19 +94,6 @@ const TodoLists = () => {
       [Card.id]: Card,
     };
     setData({ ...data, tasks: newTasks, cards: newCards });
-
-    const createUser = await fetch("/api/users/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: "user",
-        email: "email@gmail.com",
-        password: "password",
-      }),
-    });
-    console.log(createUser);
 
     // console.log(createProject)
   };
@@ -180,21 +167,30 @@ const TodoLists = () => {
           })}
 
           <div className="flex px-3 w-fit h-fit">
-            <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-800 flex-1 rounded-md justify-start">
-              <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
-                <div className="mb-3">Add New Card</div>
+            <div
+              className="w-64 bg-slate-100 h-fit pb-4 shadow-sm sha
+            dow-slate-800 flex-1 rounded-md justify-start"
+            >
+              <div
+                className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle 
+              rounded-md font-bold bg-slate-100"
+              >
+                <div className="mb-3">Add New Card </div>
                 {isShowingAddCard ? (
                   <>
                     <div className="mb-3 text-sm">Card name</div>
                     <textarea
-                      className="w-full h-fit break-words shadow-slate-800 rounded-md border-none text-left p-2 border-2 border-blue-300"
+                      className="w-full h-fit break-words shadow-slate-800 rounded-md border-none 
+                      text-left p-2 border-2 border-blue-300"
                       placeholder="Add a new card"
                       value={newCard}
                       onChange={handleCardChange}
                     ></textarea>
                     <div className="flex flex-row gap-3">
                       <button
-                        className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                        className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-10
+                        hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 
+                        ounded-md"
                         onClick={() => {
                           handleAddClick(newCard);
                         }}
@@ -202,7 +198,8 @@ const TodoLists = () => {
                         Add
                       </button>
                       <button
-                        className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                        className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800
+                        text-slate-100 shadow-sm shadow-slate-800 rounded-md"
                         onClick={showAddCard}
                       >
                         cancel
@@ -211,7 +208,8 @@ const TodoLists = () => {
                   </>
                 ) : (
                   <button
-                    className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                    className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800
+                    text-slate-100 shadow-sm shadow-slate-800 rounded-md"
                     onClick={showAddCard}
                   >
                     Add card
@@ -225,5 +223,6 @@ const TodoLists = () => {
     </div>
   );
 };
+
 
 export default TodoLists;

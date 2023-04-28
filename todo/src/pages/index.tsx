@@ -4,7 +4,9 @@ import Head from "next/head";
 import Headder from "@/components/Headder";
 import TodoLists from "@/components/TodoLists";
 
-export default function Home() {
+export default function Home(props: any) {
+
+  const { data } = props;
   return (
     <>
       <Head>
@@ -17,8 +19,21 @@ export default function Home() {
       <div className="font-font h-screen">
         <Navbar />
         <Headder />
-        <TodoLists />
+        <TodoLists myData={data}/>
       </div>
     </>
   );
+
+  
 }
+
+export async function getServerSideProps() {
+  const res = await fetch("http://localhost:3000/api/hello");
+  const data = await res.json();
+  return {
+    props: {
+      data,
+    },
+  };
+}
+

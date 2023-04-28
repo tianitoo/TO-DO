@@ -1,27 +1,30 @@
-export interface Task {
-  id: number;
-  content: string;
-}
-
-export interface Card {
-  id: string;
-  title: string;
-  taskIds: number[];
-}
-
-
 export interface MyData {
-  tasks: { [key: number]: Task };
-  cards: { [key: string]: Card };
-  cardOrder: string[];
+  Projects: Projects[];
 }
 
-export interface User {
+export interface Projects {
+  id: number;
+  name: string;
+  members: Users[];
+  cards: Cards[];
+}
+
+export interface Cards {
+  id: number;
+  name: string;
+  tasks: Tasks[];
+}
+
+export interface Tasks {
+  id: number;
+  content: string;  
+}
+
+export interface Users {
   id: number;
   name: string;
   email: string;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  projects: Projects[];
 }
 
