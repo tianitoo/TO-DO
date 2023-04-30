@@ -5,18 +5,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const { cardId } = req.query;
+    const cardId: number = req.body.cardId;
 
-    if (!cardId || typeof cardId !== "string" || isNaN(parseInt(cardId))) {
-        res.status(404).json({ message: `Invalid card id ${cardId}` });
+    if (!cardId || typeof cardId !== "number") {
+        res.status(400).json({ message: "Invalid card id" });
         return;
     }
 
-    const id = parseInt(cardId);
-
     const card = await prisma.card.findUnique({
         where: {
-            id,
+            id: cardId,
         },
     });
 

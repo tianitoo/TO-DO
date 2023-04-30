@@ -6,22 +6,21 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const content: string = req.body.content;
-  const cardId: string = req.body.cardId;
+  const cardId: number = req.body.cardId;
 
   if (!content || typeof content !== "string") {
-    res.status(404).json({ message: "Invalid task content" });
-    return;
-  }
-  if (!cardId || typeof cardId !== "string" || isNaN(parseInt(cardId))) {
-    res.status(404).json({ message: `Invalid card id ${cardId}` });
+    res.status(404).json({ message: `Invalid task ${content}` });
     return;
   }
 
-  const id = parseInt(cardId);
+  if (!cardId || typeof cardId !== "number") {
+    res.status(404).json({ message: `Invalid cardId ${cardId}` });
+    return;
+  }
 
   const taskOrder = await prisma.task.count({
     where: {
-      cardId: id,
+      cardId,
     },
   });
 
@@ -31,7 +30,7 @@ export default async function handler(
       taskOrder,
       card: {
         connect: {
-          id,
+          id: cardId,
         },
       },
     },

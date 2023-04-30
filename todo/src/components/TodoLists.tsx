@@ -1,168 +1,58 @@
+import fetshCardsByProjectId from "@/helpers/cards/getCardsByProjectId";
+import { Cards, MyData, Projects, Tasks } from "@/types/dataType";
+import { Card, Project, Task } from "@prisma/client";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { MyData } from "@/types/dataType";
 
 const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
-const reorderCardList = (card: any, startIndex: number, endIndex: number) => {
-  const newTaskIds = Array.from(card.taskIds);
-  const [removed] = newTaskIds.splice(startIndex, 1);
-  newTaskIds.splice(endIndex, 0, removed);
+const TodoLists = (props: { project: Projects }) => {
+  const project = props.project;
 
-  const newCard = {
-    ...card,
-    taskIds: newTaskIds,
-  };
-  return newCard;
-};
+  const [cards, setCards] = useState<Cards[]>([]);
 
-const TodoLists = (props: {myData: MyData}) => {
+  useEffect(() => {
+    const getCards = async () => {
+      const getCards = await fetshCardsByProjectId(project.id);
+      setCards(getCards);
+    };
+    project && getCards();
+  }, [project]);
 
-  const { myData } = props;
-  const [data, setData] = React.useState(myData);
-  const onDragEnd = (result: any) => {
-    const { destination, source } = result;
+
+  function onDragEnd(result: any) {
+    const { destination, source, draggableId } = result;
     if (!destination) {
       return;
     }
-
-    if (!destination) return;
-
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
-    ) {
+    )
       return;
-    }
-
-    const sourceCol = data.Projects[1].cards[source.index];
-    const destinationCol = data.Projects[destination.droppableId].cards[destination.index]
-    if (sourceCol === destinationCol) {
-      const card = reorderCardList(sourceCol, source.index, destination.index);
-      const newData = {
-        ...data,
-        cards: {
-          ...data.Projects,
-          [card.id]: card,
-        },
-      };
-      setData(newData);
-      return;
-    }
-
-    const startTaskIds = Array.from(sourceCol.taskIds);
-    const [removed] = startTaskIds.splice(source.index, 1);
-    const newSourceCol = {
-      ...sourceCol,
-      taskIds: startTaskIds,
-    };
-
-    const finishTaskIds = Array.from(destinationCol.taskIds);
-    finishTaskIds.splice(destination.index, 0, removed);
-    const newDestinationCol = {
-      ...destinationCol,
-      taskIds: finishTaskIds,
-    };
-
-    const newData = {
-      ...data,
-      cards: {
-        ...data.cards,
-        [newSourceCol.id]: newSourceCol,
-        [newDestinationCol.id]: newDestinationCol,
-      },
-    };
-    setData(newData);
-  };
-
-  const addTask = async (task: string, cardId: string) => {
-    const newTask = {
-      id: Object.keys(data.tasks).length + 1,
-      content: task,
-    };
-    const newTasks = {
-      ...data.tasks,
-      [newTask.id]: newTask,
-    };
-    const Card = {
-      ...data.cards[cardId],
-      taskIds: [...data.cards[cardId].taskIds, newTask.id],
-    };
-    const newCards = {
-      ...data.cards,
-      [Card.id]: Card,
-    };
-    setData({ ...data, tasks: newTasks, cards: newCards });
-
-    // console.log(createProject)
-  };
-
-  const [isShowingAddTask, setIsShowingAddTask] = React.useState("");
-  function showAddTask(id: string) {
-    if (isShowingAddTask === id) {
-      setIsShowingAddTask("");
-    } else setIsShowingAddTask(id);
+    
+    console.log(result);
+    return;
   }
 
-  const addCard = (name: string) => {
-    const newCard = {
-      id: `card-${Object.keys(data.cards).length + 1}`,
-      title: name,
-      taskIds: [],
-    };
-    const newCards = {
-      ...data.cards,
-      [newCard.id]: newCard,
-    };
-    const newCardOrder = [...data.cardOrder, newCard.id];
-    setData({ ...data, cards: newCards, cardOrder: newCardOrder });
-  };
-
-  const removeCard = (id: string) => {
-    const newCards = { ...data.cards };
-    delete newCards[id];
-    const newCardOrder = data.cardOrder.filter((colId) => colId !== id);
-    setData({ ...data, cards: newCards, cardOrder: newCardOrder });
-  };
-
-  const [newCard, setNewCard] = useState<string>("");
-
-  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setNewCard(e.target.value);
-  }
-
-  function handleAddClick(newCard: string) {
-    if (newCard === "") return;
-    addCard(newCard);
-    setNewCard("");
-    setIsShowingAddCard(false);
-  }
+  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {}
 
   const [isShowingAddCard, setIsShowingAddCard] = React.useState(false);
   function showAddCard() {
     setIsShowingAddCard(!isShowingAddCard);
   }
-
   return (
     <div className="w-fit">
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-row justify-start left-0">
-          {data.cardOrder.map((cardId) => {
-            const card = data.cards[cardId];
-            const tasks = card.taskIds.map((taskId) => data.tasks[taskId]);
+          {cards.map((card) => {
             return (
-              <Cards
-                key={card.id}
-                card={card}
-                tasks={tasks}
-                addTask={(task: string, cardId: string) =>
-                  addTask(task, cardId)
+              <div key={card.id}>
+                {
+                  <Cards  card={card} />
                 }
-                removeCard={(id: string) => removeCard(id)}
-                isShowingAddTask={isShowingAddTask}
-                showAddTask={showAddTask}
-              />
+              </div>
             );
           })}
 
@@ -183,7 +73,7 @@ const TodoLists = (props: {myData: MyData}) => {
                       className="w-full h-fit break-words shadow-slate-800 rounded-md border-none 
                       text-left p-2 border-2 border-blue-300"
                       placeholder="Add a new card"
-                      value={newCard}
+                      // value={newCard}
                       onChange={handleCardChange}
                     ></textarea>
                     <div className="flex flex-row gap-3">
@@ -192,7 +82,7 @@ const TodoLists = (props: {myData: MyData}) => {
                         hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 
                         ounded-md"
                         onClick={() => {
-                          handleAddClick(newCard);
+                          // handleAddClick(newCard);
                         }}
                       >
                         Add
@@ -223,6 +113,5 @@ const TodoLists = (props: {myData: MyData}) => {
     </div>
   );
 };
-
 
 export default TodoLists;

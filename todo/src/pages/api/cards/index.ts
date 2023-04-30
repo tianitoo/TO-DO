@@ -5,7 +5,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const projectId: number = req.body.projectId;
+
+    if (!projectId || typeof projectId !== "number") {
+        res.status(400).json({ message: "Invalid project id" });
+        return;
+    }
     const cards = await prisma.card.findMany({
+        where: {
+            projectId,
+        },
         orderBy: {
             cardOrder: "asc",
         }

@@ -22,21 +22,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const projectId = req.query.id;
+    const projectId:number = req.body.id;
 
-  if (!projectId || typeof projectId !== "string") {
+  if (!projectId || typeof projectId !== "number") {
     res.status(400).json({ message: "Invalid project id" });
     return;
   }
 
-  const id = parseInt(projectId);
-  const isIdValid = !isNaN(id);
-  if (!isIdValid) {
-    res.status(400).json({ message: "Invalid project id" });
-    return;
-  }
 
-  const project = await getProjectById(id);
+  const project = await getProjectById(projectId);
   if (!project || project === null || project === undefined) {
     res.status(404).json({ message: "Project not found" });
     return;

@@ -1,12 +1,12 @@
-import { Card } from "@/types/dataType";
+import { Cards } from "@/types/dataType";
 import React from "react";
 
 const CardActions = (props: {
-  removeCard: (cardId: string) => void;
-  card: Card;
+  // removeCard: (cardId: string) => void;
+  card: Cards;
   showActions: boolean;
 }) => {
-  const { removeCard, card, showActions } = props;
+  const { card, showActions } = props;
 
   return (
     <>
@@ -20,7 +20,7 @@ const CardActions = (props: {
           hover:text-stone-800 text-slate-100 shadow-sm
           shadow-slate-800 rounded-md`}
           onClick={() => {
-            removeCard(card.id);
+            // removeCard(card.id);
           }}
         >
           remove

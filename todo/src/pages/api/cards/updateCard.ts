@@ -6,22 +6,21 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const name: string = req.body.name;
-  const cardId: string = req.body.cardId;
+  const cardId: number = req.body.cardId;
 
   if (!name || typeof name !== "string") {
     res.status(404).json({ message: "Invalid card name" });
     return;
   }
-  if (!cardId || typeof cardId !== "string" || isNaN(parseInt(cardId))) {
+
+  if (!cardId || typeof cardId !== "number") {
     res.status(404).json({ message: `Invalid card id ${cardId}` });
     return;
   }
 
-  const id = parseInt(cardId);
-
   const updatedCard = await prisma.card.update({
     where: {
-      id,
+      id: cardId,
     },
     data: {
       name,

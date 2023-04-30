@@ -6,22 +6,27 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const name: string = req.body.name;
-  const projectId: string = req.body.projectId;
+  const cardId: string = req.body.cardId;
+  const projectId: number = req.body.projectId;
+
+  if (!cardId || typeof cardId !== "string") {
+    res.status(404).json({ message: "Invalid card id" });
+    return;
+  }
 
   if (!name || typeof name !== "string") {
     res.status(404).json({ message: "Invalid card name" });
     return;
   }
-  if (!projectId || typeof projectId !== "string" || isNaN(parseInt(projectId))) {
+
+  if (!projectId || typeof projectId !== "number") {
     res.status(404).json({ message: `Invalid project id ${projectId}` });
     return;
   }
 
-  const id = parseInt(projectId);
-
   const cardOrder = await prisma.card.count({
     where: {
-      projectId: id,
+      projectId,
     },
   });
 
@@ -29,9 +34,10 @@ export default async function handler(
     data: {
       name,
       cardOrder,
+      cardId,
       project: {
         connect: {
-          id,
+          id: projectId,
         },
       },
     },

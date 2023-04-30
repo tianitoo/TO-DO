@@ -5,9 +5,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { name, membersIds } = req.body;
+  const { name, membersIds, description } = req.body;
   if (!name || typeof name !== "string") {
     res.status(400).json({ message: "Invalid project name" });
+    return;
+  }
+  if (!description || typeof description !== "string") {
+    res.status(400).json({ message: "please give a valide description" });
     return;
   }
   if (!membersIds || !Array.isArray(membersIds)) {
@@ -24,7 +28,8 @@ export default async function handler(
   });
     const newProject = await prisma.project.create({
         data: {
-            name: name,
+        name: name,
+        description: description,
             members: {
                 connect: membersId.map((id) => ({ id })),
             },

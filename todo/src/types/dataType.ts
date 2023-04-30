@@ -5,19 +5,23 @@ export interface MyData {
 export interface Projects {
   id: number;
   name: string;
-  members: Users[];
+  description?: string;
+  members?: Users[];
   cards: Cards[];
 }
 
 export interface Cards {
   id: number;
   name: string;
+  cardId: string;
+  cardsOrder: number;
   tasks: Tasks[];
 }
 
 export interface Tasks {
   id: number;
-  content: string;  
+  content: string;
+  taskOrder: number;
 }
 
 export interface Users {

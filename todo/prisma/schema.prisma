@@ -24,6 +24,7 @@ model Card {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  cardId    String   @unique
   name      String
   project   Project  @relation(fields: [projectId], references: [id])
   projectId Int
@@ -42,10 +43,11 @@ model Task {
 }
 
 model Project {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  cards     Card[]
-  members   User[]
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String?
+  cards       Card[]
+  members     User[]
 }

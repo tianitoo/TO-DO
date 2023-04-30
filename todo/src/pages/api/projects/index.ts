@@ -7,21 +7,36 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { userId } = req.body;
+
+  if (!userId || typeof userId !== "number") {
+    res.status(400).json({ message: "Invalid user id " + userId });
+    return;
+  }
+
+
+  const dbUser = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!dbUser || dbUser === null || dbUser === undefined) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+
   const dbProjects = await prisma.project.findMany({
     where: {
       members: {
         some: {
-          id: 1,
+          id: userId,
         },
       },
     },
     include: {
       members: true,
-      cards: {
-        include: {
-          tasks: true,
-        },
-      },
+      cards: true,
     },
   });
   if (!dbProjects || dbProjects === null || dbProjects === undefined) {

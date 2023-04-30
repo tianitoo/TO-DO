@@ -5,19 +5,20 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
     ) {
-    const cardId: string = req.body.cardId;
+    const id: number = req.body.cardId;
     
-    if (!cardId || typeof cardId !== "string" || isNaN(parseInt(cardId))) {
-        res.status(404).json({ message: `Invalid card id ${cardId}` });
+    if (!id || typeof id !== "number") {
+        res.status(400).json({ message: "Invalid card id" });
         return;
     }
-    
-    const id = parseInt(cardId);
-    
+
     const deletedCard = await prisma.card.delete({
         where: {
-        id,
+            id
         },
+        include: {
+            tasks: true
+        }
     });
     
     if (!deletedCard || deletedCard === null || deletedCard === undefined) {

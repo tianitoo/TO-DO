@@ -16,7 +16,24 @@ async function getProjectsByUserId(id: number) {
       members: true,
     },
   });
-  return projects;
+  const projectAsArray = [] as Projects[];
+  projects.forEach((project) => {
+    const projectAsObject = {} as Projects;
+    projectAsObject.id = project.id;
+    projectAsObject.name = project.name;
+    const members = [] as Users[];
+    project.members.forEach((member) => {
+      const memberAsObject = {} as Users;
+      memberAsObject.id = member.id;
+      memberAsObject.name = member.name || "";
+      memberAsObject.email = member.email;
+      memberAsObject.password = member.password;
+      members.push(memberAsObject);
+    });
+    projectAsArray.push(projectAsObject);
+  });
+
+  return projectAsArray;
 }
 
 async function getCardsByProjecId(id: number) {
@@ -25,7 +42,17 @@ async function getCardsByProjecId(id: number) {
       projectId: id,
     },
   });
-  return cards;
+
+  const cardsAsArray = [] as Cards[];
+  cards.forEach((card) => {
+    const cardAsObject = {} as Cards;
+    cardAsObject.id = card.id;
+    cardAsObject.name = card.name;
+    cardAsObject.cardId = Number(card.cardId);
+    cardAsObject.cardsOrder = card.cardOrder;
+    cardsAsArray.push(cardAsObject);
+  });
+  return cardsAsArray;
 }
 
 async function getTasksByCardId(id: number) {
@@ -34,7 +61,15 @@ async function getTasksByCardId(id: number) {
       cardId: id,
     },
   });
-  return tasks;
+
+  const tasksAsArray = [] as Tasks[];
+  tasks.forEach((task) => {
+    const taskAsObject = {} as Tasks;
+    taskAsObject.id = task.id;
+    taskAsObject.content = task.content;
+    tasksAsArray.push(taskAsObject);
+  });
+  return tasksAsArray;
 }
 
 export default async function handler(
@@ -42,39 +77,18 @@ export default async function handler(
   res: NextApiResponse<MyData>
 ) {
   const data = {} as MyData;
-  const dbProjects = await getProjectsByUserId(1);
-  const projects = [] as Projects[];
-  for (const dbProject of dbProjects) {
-    const project = {} as Projects;
-    project.id = dbProject.id;
-    project.name = dbProject.name;
-    for (const dbMember of dbProject.members) {
-      const member = {} as Users;
-      if (dbMember.id && dbMember.name) {
-        member.id = dbMember.id;
-        member.name = dbMember.name;
-      }
-      project.members.push(member);
-    }
-    const dbCards = await getCardsByProjecId(dbProject.id);
-    const cards = [] as Cards[];
-    for (const dbCard of dbCards) {
-      const card = {} as Cards;
-      card.id = dbCard.id;
-      card.name = dbCard.name;
-      const dbTasks = await getTasksByCardId(dbCard.id);
-      const tasks = [] as Tasks[];
-      for (const dbTask of dbTasks) {
-        const task = {} as Tasks;
-        task.id = dbTask.id;
-        task.content = dbTask.content;
-        tasks.push(task);
-      }
+
+  const { userId } = req.body;
+  const id = Number(userId);
+
+  const projects = await getProjectsByUserId(id);
+  for (const project of projects) {
+    const cards: Cards[] = await getCardsByProjecId(project.id);
+    for (const card of cards) {
+      const tasks: Tasks[] = await getTasksByCardId(card.id);
       card.tasks = tasks;
-      cards.push(card);
     }
     project.cards = cards;
-    projects.push(project);
   }
   data.Projects = projects;
   res.status(200).json(data);

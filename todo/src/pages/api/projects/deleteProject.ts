@@ -14,13 +14,13 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const projectId: string = req.body.id;
-    if (!projectId || typeof projectId !== "string" || isNaN(parseInt(projectId))) {
-        res.status(400).json({ message: `Invalid project id ${projectId}` });
+    const id: number = req.body.id;
+
+    if (!id || typeof id !== "number") {
+        res.status(400).json({ message: "Invalid project id" });
         return;
     }
-
-    const id = parseInt(projectId);
+    
     const project = await deleteProject(id);
     if (!project || project === null || project === undefined) {
         res.status(404).json({ message: "Project not found" });

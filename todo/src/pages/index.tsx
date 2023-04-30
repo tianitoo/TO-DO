@@ -1,12 +1,22 @@
-import { Inter } from "next/font/google";
 import Navbar from "../components/Navbar";
 import Head from "next/head";
 import Headder from "@/components/Headder";
 import TodoLists from "@/components/TodoLists";
+import { useEffect, useState } from "react";
+import fetshProjectsByUserId from "@/helpers/projects/getProjectsByUserId";
+import { Projects } from "@/types/dataType";
 
-export default function Home(props: any) {
+export default function Home() {
+  const [projects, setProjects] = useState<Projects[]>([]);
 
-  const { data } = props;
+  useEffect(() => {
+    const getProjects = async () => {
+      const getprojects = await fetshProjectsByUserId(1);
+      setProjects(getprojects);
+    }
+    getProjects();
+  }, []);
+
   return (
     <>
       <Head>
@@ -16,24 +26,11 @@ export default function Home(props: any) {
         ></link>
         <title>To-Do App</title>
       </Head>
-      <div className="font-font h-screen">
+      <div className="h-screen">
         <Navbar />
-        <Headder />
-        <TodoLists myData={data}/>
+        <Headder project={projects[0]} />
+        <TodoLists project={projects[0]} />
       </div>
     </>
   );
-
-  
 }
-
-export async function getServerSideProps() {
-  const res = await fetch("http://localhost:3000/api/hello");
-  const data = await res.json();
-  return {
-    props: {
-      data,
-    },
-  };
-}
-
