@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Button from "./ui/Button";
+import TextArea from "./ui/TextArea";
 
 const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
@@ -50,10 +51,14 @@ const TodoLists = (props: { project: Projects }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-row justify-start left-0">
           {cards.map((card) => {
-            return <div key={card.id}>{<Cards card={card} />}</div>;
+            return (
+              <div key={card.id}>
+                <Cards card={card} />
+              </div>
+            );
           })}
 
-          <div className="flex px-3 w-fit h-fit">
+          <div className="flex px-3 w-fit h-fit text-slate-700">
             <div
               className="w-64 bg-slate-100 h-fit pb-4 shadow-sm sha
             dow-slate-800 flex-1 rounded-md justify-start"
@@ -66,13 +71,11 @@ const TodoLists = (props: { project: Projects }) => {
                 {isShowingAddCard ? (
                   <>
                     <div className="mb-3 text-sm">Card name</div>
-                    <textarea
-                      className="w-full h-fit break-words shadow-slate-300 shadow-sm rounded-md border-none 
-                      text-left p-2 border-2 border-slate-300 resize-none focus:outline-none focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                    <TextArea
                       placeholder="Add a new card"
                       onChange={handleCardChange}
                       value={newCard}
-                    ></textarea>
+                    />
                     <div className="flex flex-row gap-3">
                       <Button onClick={() => {}} buttonType="primary">
                         Add

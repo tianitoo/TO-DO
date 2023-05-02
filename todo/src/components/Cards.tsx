@@ -5,6 +5,7 @@ import { Cards, Tasks } from "@/types/dataType";
 import fetshTasksByCardId from "@/helpers/tasks/getTasksByCardId";
 import addTask from "@/helpers/tasks/addTask";
 import Button from "./ui/Button";
+import TextArea from "./ui/TextArea";
 
 const Cards = (props: { card: Cards }) => {
   const { card } = props;
@@ -48,7 +49,7 @@ const Cards = (props: { card: Cards }) => {
   return (
     <>
       <div className="relative">
-        <div className="flex px-3 w-fit h-fit">
+        <div className="flex px-3 w-fit h-fit text-slate-700">
           <div className="w-64 bg-slate-100 h-fit pb-4 shadow-sm shadow-slate-400 flex-1 rounded-sm justify-start">
             <div className="flex justify-between pr-3 items-center align-middle ">
               <div className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle rounded-md font-bold bg-slate-100">
@@ -101,12 +102,10 @@ const Cards = (props: { card: Cards }) => {
               <div
                 className={`flex flex-col w-11/12 text-left h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100`}
               >
-                <textarea
-                  name="task"
-                  placeholder="Enter a title for this task..."
+                <TextArea
+                  placeholder="What are you doing next?"
                   onChange={handleTaskChange}
                   value={newTask}
-                  className="w-full h-fit break-words text-left p-2 rounded-md border-2 border-blue-300"
                 />
                 <div className="flex flex-row gap-3">
                   <Button
