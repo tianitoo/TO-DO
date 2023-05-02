@@ -4,6 +4,7 @@ import CardActions from "./CardActions";
 import { Cards, Tasks } from "@/types/dataType";
 import fetshTasksByCardId from "@/helpers/tasks/getTasksByCardId";
 import addTask from "@/helpers/tasks/addTask";
+import Button from "./ui/Button";
 
 const Cards = (props: { card: Cards }) => {
   const { card } = props;
@@ -31,6 +32,7 @@ const Cards = (props: { card: Cards }) => {
   };
 
   const handleTaskClick = async (content: string, cardId: number) => {
+    if (content === "") return;
     const newTask = await addTask(content, cardId);
     setTasks([...tasks, newTask]);
     setNewTask("");
@@ -107,33 +109,34 @@ const Cards = (props: { card: Cards }) => {
                   className="w-full h-fit break-words text-left p-2 rounded-md border-2 border-blue-300"
                 />
                 <div className="flex flex-row gap-3">
-                  <button
+                  <Button
                     onClick={() => {
                       handleTaskClick(newTask, card.id);
                     }}
-                    className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                    buttonType="primary"
                   >
                     add
-                  </button>
-                  <button
-                    className="w-1/4 h-8 mt-3 s bg-red-700 hover:bg-slate-100 hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 rounded-md"
+                  </Button>
+                  <Button
                     onClick={() => {
                       showAddTask("");
                     }}
+                    buttonType="danger"
                   >
                     cancel
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
               <div className="w-11/12 text-left p-2 h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100">
-                <button
-                  className="mt-3 px-2 py-1.5 flex items-center text-sm text-center  bg-slate-800 transition duration-300 hover:bg-slate-100 hover:text-stone-800 hover:border border hover:border-slate-800 text-slate-100 rounded-md"
+                <div
                   onClick={() => showAddTask(card.cardId)}
-                >
+                  className="flex flex-row gap-3"
+                ></div>
+                <Button onClick={() => showAddTask(card.cardId)} buttonType="primary">
                   <span className="text-xl h-auto mr-1">+ </span>
                   Add Task
-                </button>
+                </Button>
               </div>
             )}
           </div>

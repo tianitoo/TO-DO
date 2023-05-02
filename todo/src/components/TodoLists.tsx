@@ -4,6 +4,7 @@ import { Card, Project, Task } from "@prisma/client";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import Button from "./ui/Button";
 
 const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
@@ -20,7 +21,6 @@ const TodoLists = (props: { project: Projects }) => {
     project && getCards();
   }, [project]);
 
-
   function onDragEnd(result: any) {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -31,12 +31,15 @@ const TodoLists = (props: { project: Projects }) => {
       destination.index === source.index
     )
       return;
-    
+
     console.log(result);
     return;
   }
 
-  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {}
+  const [newCard, setNewCard] = useState("");
+  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setNewCard(e.target.value);
+  }
 
   const [isShowingAddCard, setIsShowingAddCard] = React.useState(false);
   function showAddCard() {
@@ -47,13 +50,7 @@ const TodoLists = (props: { project: Projects }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-row justify-start left-0">
           {cards.map((card) => {
-            return (
-              <div key={card.id}>
-                {
-                  <Cards  card={card} />
-                }
-              </div>
-            );
+            return <div key={card.id}>{<Cards card={card} />}</div>;
           })}
 
           <div className="flex px-3 w-fit h-fit">
@@ -70,40 +67,25 @@ const TodoLists = (props: { project: Projects }) => {
                   <>
                     <div className="mb-3 text-sm">Card name</div>
                     <textarea
-                      className="w-full h-fit break-words shadow-slate-800 rounded-md border-none 
-                      text-left p-2 border-2 border-blue-300"
+                      className="w-full h-fit break-words shadow-slate-300 shadow-sm rounded-md border-none 
+                      text-left p-2 border-2 border-slate-300 resize-none focus:outline-none focus:ring-2 focus:ring-slate-600 focus:border-transparent"
                       placeholder="Add a new card"
-                      // value={newCard}
                       onChange={handleCardChange}
+                      value={newCard}
                     ></textarea>
                     <div className="flex flex-row gap-3">
-                      <button
-                        className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-10
-                        hover:text-stone-800 text-slate-100 shadow-sm shadow-slate-800 
-                        ounded-md"
-                        onClick={() => {
-                          // handleAddClick(newCard);
-                        }}
-                      >
+                      <Button onClick={() => {}} buttonType="primary">
                         Add
-                      </button>
-                      <button
-                        className="w-1/4 h-8 mt-3 bg-red-600 hover:bg-slate-100 hover:text-stone-800
-                        text-slate-100 shadow-sm shadow-slate-800 rounded-md"
-                        onClick={showAddCard}
-                      >
+                      </Button>
+                      <Button onClick={showAddCard} buttonType="danger">
                         cancel
-                      </button>
+                      </Button>
                     </div>
                   </>
                 ) : (
-                  <button
-                    className="w-1/2 h-8 mt-3 bg-slate-800 hover:bg-slate-100 hover:text-stone-800
-                    text-slate-100 shadow-sm shadow-slate-800 rounded-md"
-                    onClick={showAddCard}
-                  >
-                    Add card
-                  </button>
+                  <Button onClick={showAddCard} buttonType="primary">
+                    Add Card
+                  </Button>
                 )}
               </div>
             </div>
