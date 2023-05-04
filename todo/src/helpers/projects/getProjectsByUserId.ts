@@ -3,7 +3,9 @@ import { Project } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 
 const fetshProjectsByUserId = async (userId: number) => {
-  const res = await fetch("http://localhost:3000/api/projects", {
+  const link = `/api/projects`;
+  console.log("link: ", link);
+  const res = await fetch(link, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +15,7 @@ const fetshProjectsByUserId = async (userId: number) => {
     }),
   });
   const data = await res.json();
-  console.log(data);
+  console.log("data: ", data);
   const projects = [] as Projects[];
   for (const p of data) {
     const members = [] as Users[];

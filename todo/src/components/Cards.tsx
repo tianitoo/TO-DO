@@ -7,8 +7,12 @@ import addTask from "@/helpers/tasks/addTask";
 import Button from "./ui/Button";
 import TextArea from "./ui/TextArea";
 
-const Cards = (props: { card: Cards }) => {
-  const { card } = props;
+const Cards = (props: {
+  card: Cards;
+  openAddForm: string;
+  setOpenAddForm: (form: string) => void;
+}) => {
+  const { card, openAddForm, setOpenAddForm } = props;
 
   const [tasks, setTasks] = useState<Tasks[]>([]);
 
@@ -18,12 +22,10 @@ const Cards = (props: { card: Cards }) => {
       setTasks(getTasks);
     };
     card && getTasks();
-  }, [card]);
-
-  const [isShowingAddTask, setIsShowingAddTask] = useState("");
+  }, []);
 
   const showAddTask = (cardId: string) => {
-    setIsShowingAddTask(cardId);
+    setOpenAddForm(cardId);
   };
 
   const [newTask, setNewTask] = useState("");
@@ -37,7 +39,7 @@ const Cards = (props: { card: Cards }) => {
     const newTask = await addTask(content, cardId);
     setTasks([...tasks, newTask]);
     setNewTask("");
-    setIsShowingAddTask("");
+    showAddTask("");
   };
 
   const [isShowingActions, setIsShowingActions] = useState(false);
@@ -98,7 +100,7 @@ const Cards = (props: { card: Cards }) => {
                 </div>
               )}
             </Droppable>
-            {isShowingAddTask === card.cardId ? (
+            {openAddForm === card.cardId ? (
               <div
                 className={`flex flex-col w-11/12 text-left h-auto mx-auto align-middle rounded-md text-slate-600 bg-slate-100`}
               >
@@ -132,7 +134,10 @@ const Cards = (props: { card: Cards }) => {
                   onClick={() => showAddTask(card.cardId)}
                   className="flex flex-row gap-3"
                 ></div>
-                <Button onClick={() => showAddTask(card.cardId)} buttonType="primary">
+                <Button
+                  onClick={() => showAddTask(card.cardId)}
+                  buttonType="primary"
+                >
                   <span className="text-xl h-auto mr-1">+ </span>
                   Add Task
                 </Button>

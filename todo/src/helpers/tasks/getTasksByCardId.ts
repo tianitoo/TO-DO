@@ -2,7 +2,7 @@ import { Tasks } from "@/types/dataType";
 import { Task } from "@prisma/client";
 
 const fetshTasksByCardId = async (cardId: number) => {
-  const res = await fetch("http://localhost:3000/api/tasks/taskByCardId", {
+  const res = await fetch("/api/tasks/taskByCardId", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

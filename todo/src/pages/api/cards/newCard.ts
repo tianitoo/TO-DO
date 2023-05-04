@@ -5,7 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const name: string = req.body.name;
+  const name: string = req.body.cardName;
   const cardId: string = req.body.cardId;
   const projectId: number = req.body.projectId;
 
@@ -15,7 +15,7 @@ export default async function handler(
   }
 
   if (!name || typeof name !== "string") {
-    res.status(404).json({ message: "Invalid card name" });
+    res.status(404).json({ message: "Invalid card name" + name });
     return;
   }
 

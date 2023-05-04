@@ -4,7 +4,8 @@ import { Dispatch, SetStateAction } from "react";
 const fetshCardsByProjectId = async (
   projectId: number
 ) => {
-  const res = await fetch("http://localhost:3000/api/cards", {
+  const link = `/api/cards`;
+  const res = await fetch(link, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

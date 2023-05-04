@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Button from "./ui/Button";
 import TextArea from "./ui/TextArea";
+import addCard from "@/helpers/cards/addCard";
+import AddCardForm from "./ui/AddCardForm";
 
 const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
@@ -33,19 +35,14 @@ const TodoLists = (props: { project: Projects }) => {
     )
       return;
 
-    console.log(result);
     return;
   }
 
-  const [newCard, setNewCard] = useState("");
-  function handleCardChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setNewCard(e.target.value);
+  const [openAddForm, setOpenAddForm] = useState("");
+  function showAddForm(form: string) {
+    setOpenAddForm(form);
   }
 
-  const [isShowingAddCard, setIsShowingAddCard] = React.useState(false);
-  function showAddCard() {
-    setIsShowingAddCard(!isShowingAddCard);
-  }
   return (
     <div className="w-fit">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -53,45 +50,23 @@ const TodoLists = (props: { project: Projects }) => {
           {cards.map((card) => {
             return (
               <div key={card.id}>
-                <Cards card={card} />
+                <Cards
+                  card={card}
+                  openAddForm={openAddForm}
+                  setOpenAddForm={setOpenAddForm}
+                />
               </div>
             );
           })}
 
           <div className="flex px-3 w-fit h-fit text-slate-700">
-            <div
-              className="w-64 bg-slate-100 h-fit pb-4 shadow-sm sha
-            dow-slate-800 flex-1 rounded-md justify-start"
-            >
-              <div
-                className="w-11/12 text-left pt-2 pl-2 h-auto mx-auto align-middle 
-              rounded-md font-bold bg-slate-100"
-              >
-                <div className="mb-3">Add New Card </div>
-                {isShowingAddCard ? (
-                  <>
-                    <div className="mb-3 text-sm">Card name</div>
-                    <TextArea
-                      placeholder="Add a new card"
-                      onChange={handleCardChange}
-                      value={newCard}
-                    />
-                    <div className="flex flex-row gap-3">
-                      <Button onClick={() => {}} buttonType="primary">
-                        Add
-                      </Button>
-                      <Button onClick={showAddCard} buttonType="danger">
-                        cancel
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <Button onClick={showAddCard} buttonType="primary">
-                    Add Card
-                  </Button>
-                )}
-              </div>
-            </div>
+            <AddCardForm
+              openAddForm={openAddForm}
+              setOpenAddForm={setOpenAddForm}
+              cards={cards}
+              project={project}
+              setCards={setCards}
+            />
           </div>
         </div>
       </DragDropContext>
