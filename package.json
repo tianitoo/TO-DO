@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.4",
+    "lines-and-columns": "^2.0.3",
     "prisma": "^4.13.0"
   }
 }
