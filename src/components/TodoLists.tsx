@@ -1,5 +1,5 @@
 import fetshCardsByProjectId from "@/helpers/cards/getCardsByProjectId";
-import { Cards, MyData, Projects, Tasks } from "@/types/dataType";
+import type { Cards, MyData, Projects, Tasks } from "@/types/dataType";
 import { Card, Project, Task } from "@prisma/client";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";

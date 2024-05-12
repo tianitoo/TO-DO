@@ -48,7 +48,7 @@ async function getCardsByProjecId(id: number) {
     const cardAsObject = {} as Cards;
     cardAsObject.id = card.id;
     cardAsObject.name = card.name;
-    cardAsObject.cardId = Number(card.cardId);
+    cardAsObject.cardId = card.cardId;
     cardAsObject.cardsOrder = card.cardOrder;
     cardsAsArray.push(cardAsObject);
   });

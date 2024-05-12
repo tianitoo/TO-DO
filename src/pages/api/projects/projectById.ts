@@ -22,13 +22,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const projectId:number = req.body.id;
+  const projectId: number = req.body.id;
 
   if (!projectId || typeof projectId !== "number") {
     res.status(400).json({ message: "Invalid project id" });
     return;
   }
-
 
   const project = await getProjectById(projectId);
   if (!project || project === null || project === undefined) {
@@ -39,6 +38,9 @@ export default async function handler(
   p.id = project.id;
   p.name = project.name;
   const members = [] as number[];
+  if (!project.members) {
+    project.members = [];
+  }
   project.members.forEach((member) => {
     members.push(member.id);
   });
