@@ -1,7 +1,7 @@
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { useEffect, useState } from "react";
 import CardActions from "./CardActions";
-import { Cards, Tasks } from "@/types/dataType";
+import type { Cards, Tasks } from "@/types/dataType";
 import fetshTasksByCardId from "@/helpers/tasks/getTasksByCardId";
 import addTask from "@/helpers/tasks/addTask";
 import Button from "./ui/Button";
@@ -22,7 +22,7 @@ const Cards = (props: {
       setTasks(getTasks);
     };
     card && getTasks();
-  }, []);
+  }, [card]);
 
   const showAddTask = (cardId: string) => {
     setOpenAddForm(cardId);
