@@ -7,7 +7,7 @@ import addTask from "@/helpers/tasks/addTask";
 import Button from "./ui/Button";
 import TextArea from "./ui/TextArea";
 
-const Cards = (props: {
+const TodoCard = (props: {
   card: Cards;
   openAddForm: string;
   setOpenAddForm: (form: string) => void;
@@ -151,4 +151,4 @@ const Cards = (props: {
   );
 };
 
-export default Cards;
+export default TodoCard;

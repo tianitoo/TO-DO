@@ -8,8 +8,9 @@ import Button from "./ui/Button";
 import TextArea from "./ui/TextArea";
 import addCard from "@/helpers/cards/addCard";
 import AddCardForm from "./ui/AddCardForm";
+import TodoCard from "./TodoCard";
 
-const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
+// const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
 const TodoLists = (props: { project: Projects }) => {
   const project = props.project;
@@ -50,7 +51,7 @@ const TodoLists = (props: { project: Projects }) => {
           {cards.map((card) => {
             return (
               <div key={card.id}>
-                <Cards
+                <TodoCard
                   card={card}
                   openAddForm={openAddForm}
                   setOpenAddForm={setOpenAddForm}
