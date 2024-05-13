@@ -12,8 +12,9 @@ const TodoCard = (props: {
   card: Cards;
   openAddForm: string;
   setOpenAddForm: (form: string) => void;
+  setCards: React.Dispatch<React.SetStateAction<Cards[]>>;
 }) => {
-  const { card, openAddForm, setOpenAddForm } = props;
+  const { card, openAddForm, setOpenAddForm, setCards } = props;
 
   const [tasks, setTasks] = useState<Tasks[]>(card.tasks || []);
 
@@ -30,7 +31,12 @@ const TodoCard = (props: {
   const handleTaskClick = async (content: string, cardId: number) => {
     if (content === "") return;
     const newTask = await addTask(content, cardId, tasks.length);
-    setTasks([...tasks, newTask]);
+    console.log(newTask);
+    setCards((prev) => {
+      const newCards = [...prev];
+      newCards[card.cardOrder].tasks.push(newTask);
+      return newCards;
+    });
     setNewTask("");
     showAddTask("");
   };

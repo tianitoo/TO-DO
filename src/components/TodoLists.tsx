@@ -14,17 +14,15 @@ import addTask from "@/helpers/tasks/addTask";
 
 // const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
-const TodoLists = (props: { project: Projects; cards: Cards[] }) => {
+const TodoLists = (props: { project: Projects }) => {
   const project = props.project;
-  const propsCards = props.cards;
-
+  if (!project) return null;
   const [cards, setCards] = useState<Cards[]>([]);
 
-  useEffect(() => {
-    setCards(propsCards);
-  }, [propsCards]);
-
-  console.log("rendering todoLists");
+  const getCards = async () => {
+    const getCards = await fetshCardsByProjectId(project.id);
+    setCards(getCards);
+  };
 
   async function moveTask(
     taskId: number,
@@ -83,6 +81,9 @@ const TodoLists = (props: { project: Projects; cards: Cards[] }) => {
     setOpenAddForm(form);
   }
 
+  useEffect(() => {
+    getCards();
+  }, []);
   return (
     <div className="w-fit">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -94,6 +95,7 @@ const TodoLists = (props: { project: Projects; cards: Cards[] }) => {
                   card={card}
                   openAddForm={openAddForm}
                   setOpenAddForm={setOpenAddForm}
+                  setCards={setCards}
                 />
               </div>
             );

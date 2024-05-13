@@ -9,7 +9,7 @@ const AddCardForm = (props: {
   openAddForm: string;
   setOpenAddForm: (form: string) => void;
   project: { id: number };
-  setCards: (cards: Cards[]) => void;
+  setCards: React.Dispatch<React.SetStateAction<Cards[]>>;
 }) => {
   const { cards, openAddForm, setOpenAddForm, project, setCards } = props;
 
@@ -21,7 +21,7 @@ const AddCardForm = (props: {
     if (cardName === "") return;
     const cardId = cards.length + 1;
     const newCard = await addCard(cardName, project.id, `card-${cardId}`);
-    setCards([...cards, newCard]);
+    setCards((prev) => [...prev, newCard]);
     setNewCard("");
   };
 
