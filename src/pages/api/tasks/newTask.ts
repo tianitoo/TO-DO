@@ -25,6 +25,19 @@ export default async function handler(
   }
 
   const taskOrder = index;
+  const updateTaskOrder = await prisma.task.updateMany({
+    where: {
+      cardId: cardId,
+      taskOrder: {
+        gte: index,
+      },
+    },
+    data: {
+      taskOrder: {
+        increment: 1,
+      },
+    },
+  });
 
   const newTask = await prisma.task.create({
     data: {

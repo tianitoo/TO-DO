@@ -16,13 +16,19 @@ import addTask from "@/helpers/tasks/addTask";
 
 const TodoLists = (props: { project: Projects }) => {
   const project = props.project;
-  if (!project) return null;
   const [cards, setCards] = useState<Cards[]>([]);
-
+  const [openAddForm, setOpenAddForm] = useState("");
   const getCards = async () => {
+    if (!project) {
+      setCards([]);
+      return;
+    }
     const getCards = await fetshCardsByProjectId(project.id);
     setCards(getCards);
   };
+  useEffect(() => {
+    getCards();
+  }, [project]);
 
   async function moveTask(
     taskId: number,
@@ -76,14 +82,10 @@ const TodoLists = (props: { project: Projects }) => {
     // console.log(cards);
   }
 
-  const [openAddForm, setOpenAddForm] = useState("");
   function showAddForm(form: string) {
     setOpenAddForm(form);
   }
 
-  useEffect(() => {
-    getCards();
-  }, []);
   return (
     <div className="w-fit">
       <DragDropContext onDragEnd={onDragEnd}>
