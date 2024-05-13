@@ -4,18 +4,28 @@ import Headder from "@/components/Headder";
 import TodoLists from "@/components/TodoLists";
 import { useEffect, useState } from "react";
 import fetshProjectsByUserId from "@/helpers/projects/getProjectsByUserId";
-import { Projects } from "@/types/dataType";
+import { Cards, Projects } from "@/types/dataType";
+import fetshCardsByProjectId from "@/helpers/cards/getCardsByProjectId";
 
 export default function Home() {
   const [projects, setProjects] = useState<Projects[]>([]);
-
+  const [cards, setCards] = useState<Cards[]>([]);
   useEffect(() => {
     const getProjects = async () => {
       const getprojects = await fetshProjectsByUserId(1);
       setProjects(getprojects);
-    }
+    };
     getProjects();
   }, []);
+
+  useEffect(() => {
+    const getCards = async () => {
+      const getCards = await fetshCardsByProjectId(projects[0].id);
+      // console.log(getCards);
+      setCards(getCards);
+    };
+    projects[0] && getCards();
+  }, [projects]);
 
   return (
     <>
@@ -29,7 +39,7 @@ export default function Home() {
       <div className="h-screen">
         <Navbar />
         <Headder project={projects[0]} />
-        <TodoLists project={projects[0]} />
+        <TodoLists project={projects[0]} cards={cards} setCards={setCards} />
       </div>
     </>
   );

@@ -49,7 +49,7 @@ async function getCardsByProjecId(id: number) {
     cardAsObject.id = card.id;
     cardAsObject.name = card.name;
     cardAsObject.cardId = card.cardId;
-    cardAsObject.cardsOrder = card.cardOrder;
+    cardAsObject.cardOrder = card.cardOrder;
     cardsAsArray.push(cardAsObject);
   });
   return cardsAsArray;

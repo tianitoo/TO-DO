@@ -14,7 +14,7 @@ export interface Cards {
   id: number;
   name: string;
   cardId: string;
-  cardsOrder: number;
+  cardOrder: number;
   tasks: Tasks[];
 }
 
@@ -31,4 +31,3 @@ export interface Users {
   password: string;
   projects: Projects[];
 }
-

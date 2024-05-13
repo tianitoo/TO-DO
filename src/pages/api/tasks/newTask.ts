@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const content: string = req.body.content;
   const cardId: number = req.body.cardId;
-
+  const index: number = req.body.index;
   if (!content || typeof content !== "string") {
     res.status(404).json({ message: `Invalid task ${content}` });
     return;
@@ -18,11 +18,13 @@ export default async function handler(
     return;
   }
 
-  const taskOrder = await prisma.task.count({
-    where: {
-      cardId,
-    },
-  });
+  console.log("here" + index + " " + typeof index);
+  if (typeof index !== "number") {
+    res.status(404).json({ message: `Invalid index ${index}` });
+    return;
+  }
+
+  const taskOrder = index;
 
   const newTask = await prisma.task.create({
     data: {
@@ -35,6 +37,6 @@ export default async function handler(
       },
     },
   });
-    
+
   res.status(200).json(newTask);
 }

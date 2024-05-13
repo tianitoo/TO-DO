@@ -6,6 +6,7 @@ import fetshTasksByCardId from "@/helpers/tasks/getTasksByCardId";
 import addTask from "@/helpers/tasks/addTask";
 import Button from "./ui/Button";
 import TextArea from "./ui/TextArea";
+import deleteTask from "@/helpers/tasks/removeTask";
 
 const TodoCard = (props: {
   card: Cards;
@@ -14,15 +15,7 @@ const TodoCard = (props: {
 }) => {
   const { card, openAddForm, setOpenAddForm } = props;
 
-  const [tasks, setTasks] = useState<Tasks[]>([]);
-
-  useEffect(() => {
-    const getTasks = async () => {
-      const getTasks = await fetshTasksByCardId(card.id);
-      setTasks(getTasks);
-    };
-    card && getTasks();
-  }, [card]);
+  const [tasks, setTasks] = useState<Tasks[]>(card.tasks || []);
 
   const showAddTask = (cardId: string) => {
     setOpenAddForm(cardId);
@@ -36,7 +29,7 @@ const TodoCard = (props: {
 
   const handleTaskClick = async (content: string, cardId: number) => {
     if (content === "") return;
-    const newTask = await addTask(content, cardId);
+    const newTask = await addTask(content, cardId, tasks.length);
     setTasks([...tasks, newTask]);
     setNewTask("");
     showAddTask("");
@@ -91,6 +84,14 @@ const TodoCard = (props: {
                             }`}
                           >
                             {task.content}
+                            <Button
+                              onClick={() => {
+                                deleteTask(task.id);
+                              }}
+                              buttonType="danger"
+                            >
+                              delete
+                            </Button>
                           </div>
                         );
                       }}
