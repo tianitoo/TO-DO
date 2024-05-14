@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import fetshUserBySession from "@/helpers/users/getUserBySession";
+import LoginForm from "@/components/Signin";
 
 export default function Home() {
   // const session = authOptions;
@@ -58,15 +59,9 @@ export default function Home() {
         ) : (
           <div className="h-96 flex justify-center items-center">
             <h1 className="text-4xl">Please Login</h1>
+            <LoginForm />
           </div>
         )}
-        e
-        <div
-          className="flex justify-center items-center h-16 bg-gray-800 text-white"
-          onClick={() => Router.push("/api/auth/signin")}
-        >
-          <h1>Login</h1>
-        </div>
         <div
           className="flex justify-center items-center h-16 bg-gray-800 text-white"
           onClick={() => signOut()}
