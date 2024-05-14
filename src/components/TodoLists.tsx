@@ -8,6 +8,7 @@ import AddCardForm from "./ui/AddCardForm";
 import TodoCard from "./TodoCard";
 import deleteTask from "@/helpers/tasks/removeTask";
 import addTask from "@/helpers/tasks/addTask";
+import updateTask from "@/helpers/tasks/updateTask";
 
 // const Cards = dynamic(() => import("@/components/Cards"), { ssr: false });
 
@@ -33,8 +34,9 @@ const TodoLists = (props: { project: Projects }) => {
     content: string,
     index: number
   ) {
-    await deleteTask(taskId);
-    const newTask = await addTask(content, cardId, index);
+    const newTask = await updateTask(taskId, cardId, content, index);
+    // await deleteTask(taskId);
+    // const newTask = await addTask(content, cardId, index);
     return newTask;
   }
   async function onDragEnd(result: any) {

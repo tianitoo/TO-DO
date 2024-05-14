@@ -8,32 +8,36 @@ export default async function handler(
   const content: string = req.body.content;
   const taskId: string = req.body.taskId;
   const cardId: string = req.body.cardId;
+  const index: number = req.body.index;
 
   if (!content || typeof content !== "string") {
     res.status(404).json({ message: "Invalid task content" });
     return;
   }
-  if (!taskId || typeof taskId !== "string" || isNaN(parseInt(taskId))) {
+  if (typeof taskId !== "number") {
     res.status(404).json({ message: `Invalid task id ${taskId}` });
     return;
   }
-  if (!cardId || typeof cardId !== "string" || isNaN(parseInt(cardId))) {
+  if (typeof cardId !== "number") {
     res.status(404).json({ message: `Invalid card id ${cardId}` });
     return;
   }
 
-  const id = parseInt(taskId);
-  const cardIdInt = parseInt(cardId);
+  if (typeof index !== "number") {
+    res.status(404).json({ message: `Invalid index ${index}` });
+    return;
+  }
 
   const updatedTask = await prisma.task.update({
     where: {
-      id,
+      id: taskId,
     },
     data: {
       content,
+      taskOrder: index,
       card: {
         connect: {
-          id: cardIdInt,
+          id: cardId,
         },
       },
     },
