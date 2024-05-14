@@ -1,7 +1,15 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import SignOut from "./signout";
 
-function ResponsiveNavbar({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void; }) {
+function ResponsiveNavbar({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   return (
     <div
       className={`md:hidden absolute rounded-3xl top-0 w-full z-30 bg-slate-300 shadow-md shadow-slate-300 transform ${
@@ -24,6 +32,8 @@ function ResponsiveNavbar({ open, setOpen }: { open: boolean; setOpen: (open: bo
 }
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
+
   const [open, setOpen] = useState(false);
   return (
     <div className="w-screen">
@@ -70,7 +80,11 @@ const Navbar = () => {
           <div className="hidden md:flex">
             <button className=" text-slate-700 md:mx-7">Projects</button>
             <button className=" text-slate-700 md:mx-7">Documentation</button>
-            <button className=" text-slate-700 md:mx-7">Login</button>
+            {session ? (
+              <SignOut />
+            ) : (
+              <button className=" text-slate-700 md:mx-7">Login</button>
+            )}
           </div>
         </div>
       </div>

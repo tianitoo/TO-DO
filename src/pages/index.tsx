@@ -62,12 +62,6 @@ export default function Home() {
             <LoginForm />
           </div>
         )}
-        <div
-          className="flex justify-center items-center h-16 bg-gray-800 text-white"
-          onClick={() => signOut()}
-        >
-          <h1>Logout</h1>
-        </div>
       </div>
     </>
   );
