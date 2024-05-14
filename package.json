@@ -15,9 +15,11 @@
     "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
     "autoprefixer": "10.4.14",
+    "bcrypt": "^5.1.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "next": "13.3.0",
+    "next-auth": "^4.24.7",
     "postcss": "8.4.21",
     "react": "18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -26,6 +28,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/react-beautiful-dnd": "^13.1.4",
     "lines-and-columns": "^2.0.3",
     "prisma": "^4.13.0"

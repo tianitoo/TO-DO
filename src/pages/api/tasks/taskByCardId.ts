@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { Tasks } from "@/types/dataType";
 import { NextApiRequest, NextApiResponse } from "next";
 

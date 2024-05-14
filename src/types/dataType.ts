@@ -27,6 +27,7 @@ export interface Tasks {
 export interface Users {
   id: number;
   name: string;
+  username: string;
   email: string;
   password: string;
   projects: Projects[];

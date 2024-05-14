@@ -25,6 +25,7 @@ const fetshProjectsByUserId = async (userId: number) => {
         name: m.name,
         email: m.email,
         password: m.password,
+        username: m.username, // Add the 'username' property
         projects: [],
       });
     }

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { Projects, Users } from "@/types/dataType";
 import { Card, Task } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -13,7 +13,6 @@ export default async function handler(
     res.status(400).json({ message: "Invalid user id " + userId });
     return;
   }
-
 
   const dbUser = await prisma.user.findUnique({
     where: {

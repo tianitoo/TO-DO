@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { Task } from "@prisma/client";
 
 const addTask = async (content: string, cardId: number, index: number) => {

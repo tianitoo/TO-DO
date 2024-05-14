@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -26,18 +26,18 @@ export default async function handler(
     }
     membersId.push(parseInt(member));
   });
-    const newProject = await prisma.project.create({
-        data: {
-        name: name,
-        description: description,
-            members: {
-                connect: membersId.map((id) => ({ id })),
-            },
-        },
-        include: {
-            members: true,
-        },
-    });
+  const newProject = await prisma.project.create({
+    data: {
+      name: name,
+      description: description,
+      members: {
+        connect: membersId.map((id) => ({ id })),
+      },
+    },
+    include: {
+      members: true,
+    },
+  });
   if (!newProject || newProject === null || newProject === undefined) {
     res.status(404).json({ message: "Project not found" });
     return;

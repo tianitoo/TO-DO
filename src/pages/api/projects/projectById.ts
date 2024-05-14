@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { Projects } from "@/types/dataType";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ProjectReference } from "typescript";

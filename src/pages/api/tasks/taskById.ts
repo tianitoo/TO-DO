@@ -1,23 +1,23 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
-    const taskId: string = req.body.taskId;
-    
-    if (!taskId || typeof taskId !== "string" || isNaN(parseInt(taskId))) {
-        res.status(404).json({ message: `Invalid task id ${taskId}` });
-        return;
-    }
+  const taskId: string = req.body.taskId;
 
-    const id = parseInt(taskId);
+  if (!taskId || typeof taskId !== "string" || isNaN(parseInt(taskId))) {
+    res.status(404).json({ message: `Invalid task id ${taskId}` });
+    return;
+  }
 
-    const Task = await prisma.task.findUnique({
-        where: {
-            id,
-        },
-    });
-    res.status(200).json(Task);
+  const id = parseInt(taskId);
+
+  const Task = await prisma.task.findUnique({
+    where: {
+      id,
+    },
+  });
+  res.status(200).json(Task);
 }
