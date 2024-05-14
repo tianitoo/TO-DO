@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 const fetshProjectsByUserId = async (userId: number) => {
   const link = `/api/projects`;
-  console.log("link: ", link);
+  if (userId === -1) return [];
   const res = await fetch(link, {
     method: "POST",
     headers: {
@@ -15,7 +15,6 @@ const fetshProjectsByUserId = async (userId: number) => {
     }),
   });
   const data = await res.json();
-  console.log("data: ", data);
   const projects = [] as Projects[];
   for (const p of data) {
     const members = [] as Users[];

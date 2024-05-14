@@ -13,14 +13,12 @@ export const authOptions = {
       },
 
       async authorize(credentials, req) {
-        console.log("credentials");
         // Find the user by name
         const user = await prisma.user.findFirst({
           where: {
             name: credentials?.name,
           },
         });
-        console.log(user);
 
         if (!user) {
           return null;

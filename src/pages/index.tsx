@@ -4,11 +4,12 @@ import Headder from "@/components/Headder";
 import TodoLists from "@/components/TodoLists";
 import { use, useEffect, useState } from "react";
 import fetshProjectsByUserId from "@/helpers/projects/getProjectsByUserId";
-import { Cards, Projects } from "@/types/dataType";
+import { Cards, Projects, Users } from "@/types/dataType";
 import fetshCardsByProjectId from "@/helpers/cards/getCardsByProjectId";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import fetshUserBySession from "@/helpers/users/getUserBySession";
 
 export default function Home() {
   // const session = authOptions;
@@ -16,13 +17,27 @@ export default function Home() {
 
   const Router = useRouter();
   const [projects, setProjects] = useState<Projects[]>([]);
+  const [user, setUser] = useState<Users>();
+  const getData = async () => {
+    if (session) {
+      console.log(session);
+      if (session.user && session.user.email && session.user.name) {
+        const user = await fetshUserBySession(
+          session.user.name,
+          session.user.email
+        );
+        setUser(user);
+        const projects = await fetshProjectsByUserId(user.id);
+        setProjects(projects);
+      }
+    }
+  };
+
   useEffect(() => {
-    const getProjects = async () => {
-      const getprojects = await fetshProjectsByUserId(1);
-      setProjects(getprojects);
-    };
-    getProjects();
-  }, []);
+    if (session) {
+      getData();
+    }
+  }, [session]);
 
   return (
     <>
