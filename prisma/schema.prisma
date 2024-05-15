@@ -37,7 +37,7 @@ model Card {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId Int
   tasks     Task[]
-  cardOrder Int
+  cardOrder Int      @unique
 
   @@schema(map: "public")
 }

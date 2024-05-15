@@ -57,10 +57,7 @@ export default function Home() {
             <TodoLists project={projects[0]} />
           </>
         ) : (
-          <div className="h-96 flex justify-center items-center">
-            <h1 className="text-4xl">Please Login</h1>
-            <LoginForm />
-          </div>
+          <LoginForm />
         )}
       </div>
     </>
